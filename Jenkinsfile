@@ -13,22 +13,26 @@ pipeline {
             steps {
                 script {
                     echo "Stage 2: Unit and Integration Tests - Running tests using JUnit."
-                    // Simulate creating a log file
-                    writeFile file: 'unit_test.log', text: 'Unit Test logs...'
+                    // Capture console output
+                    def testOutput = sh(script: 'mvn test', returnStdout: true).trim()
+                    // Store console output in the environment variable for later use
+                    env.TEST_OUTPUT = testOutput
                 }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'unit_test.log'
+                    // Send success email with console output as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Unit and Integration Tests stage completed successfully.\n\nLogs:\n${readFile('unit_test.log')}"
+                        body: "The Unit and Integration Tests stage completed successfully.\n\nLogs:\n${env.TEST_OUTPUT}",
+                        attachments: 'test_output.log'
                 }
                 failure {
-                    archiveArtifacts artifacts: 'unit_test.log'
+                    // Send failure email with console output as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Unit and Integration Tests stage failed.\n\nLogs:\n${readFile('unit_test.log')}"
+                        body: "The Unit and Integration Tests stage failed.\n\nLogs:\n${env.TEST_OUTPUT}",
+                        attachments: 'test_output.log'
                 }
             }
         }
@@ -43,22 +47,26 @@ pipeline {
             steps {
                 script {
                     echo "Stage 4: Security Scan - Scanning code for vulnerabilities using OWASP Dependency-Check."
-                    // Simulate creating a log file
-                    writeFile file: 'security_scan.log', text: 'Security Scan logs...'
+                    // Capture console output
+                    def securityOutput = sh(script: 'dependency-check.sh --project MyProject --out .', returnStdout: true).trim()
+                    // Store console output in the environment variable for later use
+                    env.SECURITY_OUTPUT = securityOutput
                 }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'security_scan.log'
+                    // Send success email with console output as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Security Scan stage completed successfully.\n\nLogs:\n${readFile('security_scan.log')}"
+                        body: "The Security Scan stage completed successfully.\n\nLogs:\n${env.SECURITY_OUTPUT}",
+                        attachments: 'security_scan_output.log'
                 }
                 failure {
-                    archiveArtifacts artifacts: 'security_scan.log'
+                    // Send failure email with console output as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Security Scan stage failed.\n\nLogs:\n${readFile('security_scan.log')}"
+                        body: "The Security Scan stage failed.\n\nLogs:\n${env.SECURITY_OUTPUT}",
+                        attachments: 'security_scan_output.log'
                 }
             }
         }
@@ -83,5 +91,10 @@ pipeline {
                 }
             }
         }
+    }
+
+    // Configure job triggers for GitHub commits
+    triggers {
+        pollSCM('H/5 * * * *') // Polls for changes every 5 minutes
     }
 }
