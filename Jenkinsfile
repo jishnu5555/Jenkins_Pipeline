@@ -21,17 +21,17 @@ pipeline {
             post {
                 success {
                     // Send success email with log file as attachment
-                    emailext to: 'jishnugdv@gmail.com',
-                             subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                             body: "The Unit and Integration Tests stage completed successfully.",
-                             attachments: 'unit_test.log'
+                    mail to: 'jishnugdv@gmail.com',
+                         subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                         body: "The Unit and Integration Tests stage completed successfully.",
+                         attachLog: true
                 }
                 failure {
                     // Send failure email with log file as attachment
-                    emailext to: 'jishnugdv@gmail.com',
-                             subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                             body: "The Unit and Integration Tests stage failed.",
-                             attachments: 'unit_test.log'
+                    mail to: 'jishnugdv@gmail.com',
+                         subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                         body: "The Unit and Integration Tests stage failed.",
+                         attachLog: true
                 }
             }
         }
@@ -54,17 +54,17 @@ pipeline {
             post {
                 success {
                     // Send success email with log file as attachment
-                    emailext to: 'jishnugdv@gmail.com',
-                             subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                             body: "The Security Scan stage completed successfully.",
-                             attachments: 'security_scan.log'
+                    mail to: 'jishnugdv@gmail.com',
+                         subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                         body: "The Security Scan stage completed successfully.",
+                         attachLog: true
                 }
                 failure {
                     // Send failure email with log file as attachment
-                    emailext to: 'jishnugdv@gmail.com',
-                             subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                             body: "The Security Scan stage failed.",
-                             attachments: 'security_scan.log'
+                    mail to: 'jishnugdv@gmail.com',
+                         subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                         body: "The Security Scan stage failed.",
+                         attachLog: true
                 }
             }
         }
