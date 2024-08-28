@@ -1,60 +1,96 @@
 pipeline {
     agent any
 
-    environment {
-        DIRECTORY_PATH = 'C:\\Users\\jishnu chowdary\\Downloads\\SIT223'
-        TESTING_ENVIRONMENT = 'staging'
-        PRODUCTION_ENVIRONMENT = 'jishnu_chowdary'
+    triggers {
+        githubPush()
+        // Add a short delay
+        // This is a workaround for Jenkins' lack of direct support for delay on GitHub triggers.
+        // For real delay, consider using a scheduled job or a plugin.
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
-                    echo "Fetch the source code from the directory path specified by the environment variable"
-                    echo "Compile the code and generate any necessary artifacts"
+                    echo "Stage 1: Build - Building the code using Maven."
                 }
             }
         }
-
-        stage('Test') {
+        stage('Unit and Integration Tests') {
             steps {
                 script {
-                    echo "Unit tests"
-                    echo "Integration tests"
+                    echo "Stage 2: Unit and Integration Tests - Running tests using JUnit."
+                    // Simulate creating a log file
+                    writeFile file: 'unit_test.log', text: 'Unit Test logs...'
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'unit_test.log'
+                    emailext attachLog: true,
+                             to: 'jishnugdv@gmail.com',
+                             subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             body: "The Unit and Integration Tests stage completed successfully.\n\nLogs attached."
+                }
+                failure {
+                    archiveArtifacts artifacts: 'unit_test.log'
+                    emailext attachLog: true,
+                             to: 'jishnugdv@gmail.com',
+                             subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             body: "The Unit and Integration Tests stage failed.\n\nLogs attached."
                 }
             }
         }
-
-        stage('Code Quality Check') {
+        stage('Code Analysis') {
             steps {
                 script {
-                    echo "Check the quality of the code"
+                    echo "Stage 3: Code Analysis - Analyzing code using SonarQube."
                 }
             }
         }
-
-        stage('Deploy') {
+        stage('Security Scan') {
             steps {
                 script {
-                    echo "Deploy the application to a testing environment specified by the environment variable"
+                    echo "Stage 4: Security Scan - Scanning code for vulnerabilities using OWASP Dependency-Check."
+                    // Simulate creating a log file
+                    writeFile file: 'security_scan.log', text: 'Security Scan logs...'
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'security_scan.log'
+                    emailext attachLog: true,
+                             to: 'jishnugdv@gmail.com',
+                             subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             body: "The Security Scan stage completed successfully.\n\nLogs attached."
+                }
+                failure {
+                    archiveArtifacts artifacts: 'security_scan.log'
+                    emailext attachLog: true,
+                             to: 'jishnugdv@gmail.com',
+                             subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                             body: "The Security Scan stage failed.\n\nLogs attached."
                 }
             }
         }
-
-        stage('Approval') {
+        stage('Deploy to Staging') {
             steps {
                 script {
-                    echo "Waiting for approval..."
-                    sleep 10
+                    echo "Stage 5: Deploy to Staging - Deploying application to a staging server (e.g., AWS EC2 instance)."
                 }
             }
         }
-
+        stage('Integration Tests on Staging') {
+            steps {
+                script {
+                    echo "Stage 6: Integration Tests on Staging - Running integration tests on the staging environment."
+                }
+            }
+        }
         stage('Deploy to Production') {
             steps {
                 script {
-                    echo "Deploy the code to the production environment: ${PRODUCTION_ENVIRONMENT}"
+                    echo "Stage 7: Deploy to Production - Deploying application to a production server (e.g., AWS EC2 instance)."
                 }
             }
         }
