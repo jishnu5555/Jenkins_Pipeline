@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-        githubPush()
-        // Add a short delay
-        // This is a workaround for Jenkins' lack of direct support for delay on GitHub triggers.
-        // For real delay, consider using a scheduled job or a plugin.
-    }
-
     stages {
         stage('Build') {
             steps {
