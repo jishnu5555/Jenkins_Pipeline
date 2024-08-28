@@ -13,26 +13,25 @@ pipeline {
             steps {
                 script {
                     echo "Stage 2: Unit and Integration Tests - Running tests using JUnit."
-                    // Capture console output
+                    // Capture console output and save to a log file
                     def testOutput = sh(script: 'mvn test', returnStdout: true).trim()
-                    // Store console output in the environment variable for later use
-                    env.TEST_OUTPUT = testOutput
+                    writeFile file: 'unit_test.log', text: testOutput
                 }
             }
             post {
                 success {
-                    // Send success email with console output as attachment
+                    // Send success email with log file as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Unit and Integration Tests stage completed successfully.\n\nLogs:\n${env.TEST_OUTPUT}",
-                        attachments: 'test_output.log'
+                        body: "The Unit and Integration Tests stage completed successfully.",
+                        attachments: 'unit_test.log'
                 }
                 failure {
-                    // Send failure email with console output as attachment
+                    // Send failure email with log file as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Unit and Integration Tests stage failed.\n\nLogs:\n${env.TEST_OUTPUT}",
-                        attachments: 'test_output.log'
+                        body: "The Unit and Integration Tests stage failed.",
+                        attachments: 'unit_test.log'
                 }
             }
         }
@@ -47,26 +46,25 @@ pipeline {
             steps {
                 script {
                     echo "Stage 4: Security Scan - Scanning code for vulnerabilities using OWASP Dependency-Check."
-                    // Capture console output
+                    // Capture console output and save to a log file
                     def securityOutput = sh(script: 'dependency-check.sh --project MyProject --out .', returnStdout: true).trim()
-                    // Store console output in the environment variable for later use
-                    env.SECURITY_OUTPUT = securityOutput
+                    writeFile file: 'security_scan.log', text: securityOutput
                 }
             }
             post {
                 success {
-                    // Send success email with console output as attachment
+                    // Send success email with log file as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Security Scan stage completed successfully.\n\nLogs:\n${env.SECURITY_OUTPUT}",
-                        attachments: 'security_scan_output.log'
+                        body: "The Security Scan stage completed successfully.",
+                        attachments: 'security_scan.log'
                 }
                 failure {
-                    // Send failure email with console output as attachment
+                    // Send failure email with log file as attachment
                     mail to: 'jishnugdv@gmail.com',
                         subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "The Security Scan stage failed.\n\nLogs:\n${env.SECURITY_OUTPUT}",
-                        attachments: 'security_scan_output.log'
+                        body: "The Security Scan stage failed.",
+                        attachments: 'security_scan.log'
                 }
             }
         }
@@ -95,6 +93,6 @@ pipeline {
 
     // Configure job triggers for GitHub commits
     triggers {
-        pollSCM('H/1 * * * *') // Polls for changes every 5 minutes
+        pollSCM('H/5 * * * *') // Polls for changes every 5 minutes
     }
 }
