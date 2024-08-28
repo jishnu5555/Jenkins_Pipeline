@@ -1,9 +1,6 @@
 pipeline {
     agent any
-    triggers {
-        // Trigger build after a 1-minute delay when a new commit is detected
-        pollSCM('H/1 * * * *')
-    }
+
     stages {
         stage('Build') {
             steps {
@@ -28,16 +25,20 @@ pipeline {
                     }
                 }
                 success {
-                    mail to: '',
+                    emailext(
+                        to: 'your-email@example.com',
                         subject: "Success: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: "The Unit and Integration Tests stage completed successfully.\n\nPlease find the attached logs up to this stage.",
                         attachmentsPattern: 'test_stage.log'
+                    )
                 }
                 failure {
-                    mail to: '',
+                    emailext(
+                        to: 'your-email@example.com',
                         subject: "Failure: Unit and Integration Tests - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: "The Unit and Integration Tests stage failed.\n\nPlease find the attached logs up to this stage.",
                         attachmentsPattern: 'test_stage.log'
+                    )
                 }
             }
         }
@@ -64,16 +65,20 @@ pipeline {
                     }
                 }
                 success {
-                    mail to: 'jishnugdv@gmail.com',
+                    emailext(
+                        to: 'your-email@example.com',
                         subject: "Success: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: "The Security Scan stage completed successfully.\n\nPlease find the attached logs up to this stage.",
                         attachmentsPattern: 'security_stage.log'
+                    )
                 }
                 failure {
-                    mail to: 'jishnugdv@gmail.com',
+                    emailext(
+                        to: 'your-email@example.com',
                         subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: "The Security Scan stage failed.\n\nPlease find the attached logs up to this stage.",
                         attachmentsPattern: 'security_stage.log'
+                    )
                 }
             }
         }
@@ -100,5 +105,3 @@ pipeline {
         }
     }
 }
-
-   
