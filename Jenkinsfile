@@ -95,6 +95,6 @@ pipeline {
 
     // Configure job triggers for GitHub commits
     triggers {
-        pollSCM('H/5 * * * *') // Polls for changes every 5 minutes
+        pollSCM('H/1 * * * *') // Polls for changes every 5 minutes
     }
 }
