@@ -70,6 +70,7 @@ pipeline {
                              to: 'jishnugdv@gmail.com',
                              subject: "Failure: Security Scan - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                              body: "The Security Scan stage failed.\n\nLogs attached."
+                    //test for the build trigger
                 }
             }
         }
