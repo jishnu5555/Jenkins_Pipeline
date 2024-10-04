@@ -1,3 +1,5 @@
+package edu.deakin.sit218.coachwebspringapp;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
