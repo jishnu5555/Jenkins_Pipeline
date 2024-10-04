@@ -4,15 +4,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the code using Maven...'
-                bat 'mvn clean install'  // Use 'bat' for Windows
+                bat 'mvn clean install'  
             }
-            post {
-                success {
-                    echo "Build successful. JAR file created and archived."
-                }
-                failure {
-                    echo "Build failed. Check logs for details."
-                }
         }
     }
 }
