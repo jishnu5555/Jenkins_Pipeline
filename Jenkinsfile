@@ -1,18 +1,13 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'Maven' // Ensure this matches the name configured in Jenkins for Maven
+    agent any 
+    environment {
+        JAVA_HOME = "C:\\Program Files\\Java\\jdk-17"
+        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
     }
-
     stages {
-
         stage('Build') {
             steps {
-                script {
-                    def mavenHome = tool name: 'Maven', type: 'maven'
-                    bat "\"${mavenHome}\\bin\\mvn\" clean package"
-                }
+                bat '"C:\\Users\\jishnu chowdary\\AppData\\Local\\Jenkins\\.jenkins\\tools\\hudson.tasks.Maven_MavenInstallation\\Maven\\bin\\mvn" clean package'
             }
         }
     }
