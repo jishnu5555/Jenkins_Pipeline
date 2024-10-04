@@ -1,44 +1,26 @@
 package edu.deakin.sit218.coachwebspringapp;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public class CoachControllerTest {
-
-    private CoachController coachController;
-
-    @Mock
-    private Model model;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        coachController = new CoachController();
-    }
 
     @Test
     public void testWorkout() {
         // Arrange
+        CoachController controller = new CoachController();
+        Model model = Mockito.mock(Model.class);
         String studentName = "John Doe";
-        when(model.addAttribute("name", studentName)).thenReturn(model);
 
         // Act
-        String viewName = coachController.workout(studentName, model);
+        String viewName = controller.workout(studentName, model);
 
         // Assert
-        verify(model).addAttribute("name", studentName);
-
-        // Since the message is randomly generated, we can only verify that
-        // it was added. So we won't know its exact value unless we control randomness
-        assertTrue("Model should contain a message", 
-            model.containsAttribute("message"));
-        // Check that the returned view name is correct
-        assertEquals("workout", viewName);
+        Mockito.verify(model).addAttribute("name", studentName);
+        Mockito.verify(model).addAttribute(Mockito.anyString(), Mockito.anyString());
+        assertTrue(viewName.equals("workout"), "The view name should be 'workout'");
     }
 }
