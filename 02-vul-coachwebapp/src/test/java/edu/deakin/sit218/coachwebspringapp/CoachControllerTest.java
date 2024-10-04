@@ -1,6 +1,6 @@
 package edu.deakin.sit218.coachwebspringapp;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.ui.Model;
@@ -20,7 +20,7 @@ public class CoachControllerTest {
 
         // Assert
         Mockito.verify(model).addAttribute("name", studentName);
-        Mockito.verify(model).addAttribute(Mockito.anyString(), Mockito.anyString());
-        assertTrue(viewName.equals("workout"), "The view name should be 'workout'");
+        Mockito.verify(model, Mockito.times(1)).addAttribute(Mockito.anyString(), Mockito.anyString()); // Verify that it is called once.
+        assertEquals("workout", viewName, "The view name should be 'workout'");
     }
 }
