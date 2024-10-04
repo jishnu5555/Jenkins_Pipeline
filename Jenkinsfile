@@ -30,5 +30,13 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            steps {
+                dir('02-vul-coachwebapp') {
+                    bat 'docker-compose down || true' // Stop any running container if exists
+                    bat 'docker-compose up --build -d' // Build and run in detached mode
+                }
+            }
+        }
     }
 }
