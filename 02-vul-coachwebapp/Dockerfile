@@ -1,14 +1,11 @@
-# Use an official JDK runtime as the base image
-FROM openjdk:17-jdk-slim
+# Use an official Tomcat image with JDK 17
+FROM tomcat:9.0-jdk17
 
-# Set the working directory inside the container
-WORKDIR /app
+# Remove default webapps to avoid conflicts
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy the WAR file from the Maven build
-COPY target/coachwebspringapp-1.0-SNAPSHOT.war /app/app.war
+# Copy the WAR file into Tomcat's webapps directory
+COPY target/coachwebspringapp-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expose port 8080 for the application
+# Expose Tomcat’s default port
 EXPOSE 8080
-
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.war"]
