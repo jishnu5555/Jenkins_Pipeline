@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     def mavenHome = tool name: 'Maven', type: 'maven'
-                    bat "${mavenHome}/bin/mvn clean package"
+                    bat "\"${mavenHome}\\bin\\mvn\" clean package"
                 }
             }
         }
