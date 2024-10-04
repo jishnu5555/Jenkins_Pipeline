@@ -7,7 +7,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                dir('02-vul-coachwebapp'){
                 bat '"C:\\Users\\jishnu chowdary\\AppData\\Local\\Jenkins\\.jenkins\\tools\\hudson.tasks.Maven_MavenInstallation\\Maven\\bin\\mvn" clean package'
+                }
             }
         }
     }
