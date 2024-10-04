@@ -1,15 +1,11 @@
-package edu.deakin.sit218.coachwebspringapp;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import javax.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
 public class CoachControllerTest {
 
@@ -35,7 +31,9 @@ public class CoachControllerTest {
 
         // Assert
         verify(model).addAttribute("name", studentName);
-        // Verify that a message is added to the model
+
+        // Since the message is randomly generated, we can only verify that
+        // it was added. So we won't know its exact value unless we control randomness
         assertTrue("Model should contain a message", 
             model.containsAttribute("message"));
         // Check that the returned view name is correct
