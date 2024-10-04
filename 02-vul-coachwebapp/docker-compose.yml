@@ -3,5 +3,5 @@ services:
   coachwebapp:
     build: .
     ports:
-      - "8080:8080" # Map host port 8080 to container port 8080
+      - "8081:8080" # Map host port 8080 to container port 8080
     restart: always
