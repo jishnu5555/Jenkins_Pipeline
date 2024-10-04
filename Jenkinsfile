@@ -19,5 +19,16 @@ pipeline {
                 }
             }
         }
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv('LocalSonarQube') {
+                        dir('02-vul-coachwebapp') {
+                            bat '"C:\\Users\\jishnu chowdary\\AppData\\Local\\Jenkins\\.jenkins\\tools\\hudson.tasks.Maven_MavenInstallation\\Maven\\bin\\mvn" sonar:sonar -Dsonar.projectKey=GIT_HD'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
