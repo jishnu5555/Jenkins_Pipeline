@@ -3,7 +3,8 @@ pipeline {
     environment {
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-17"
         PATH = "${JAVA_HOME}\\bin;${env.PATH}"
-        DD_API_KEY = credentials('Jenkins_key') // Grabs your Datadog API key securely
+        DD_API_KEY = credentials('Jenkins_key') // Datadog API key
+        OCTOPUS_API_KEY = credentials('Octopus_API_Key') // Octopus API key from Jenkins credentials
     }
     stages {
         stage('Build') {
@@ -32,19 +33,32 @@ pipeline {
             }
         }
         stage('Deploy') {
-    steps {
-        dir('02-vul-coachwebapp') {
-            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" down || true' 
-            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" up --build -d'
+            steps {
+                dir('02-vul-coachwebapp') {
+                    bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" down || true' 
+                    bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" up --build -d'
+                }
+            }
         }
-    }
-}
-
+        stage('Release') {
+            steps {
+                script {
+                    octopusDeployRelease additionalArgs: '',
+                    releaseVersion: '1.0.${BUILD_ID}',
+                    project: 'YourProjectName',
+                    serverId: 'OctopusServer',
+                    spaceId: 'Spaces-1',
+                    environment: 'Production',
+                    tenant: '',
+                    waitForDeployment: true,
+                    deployTo: 'Production'
+                }
+            }
+        }
         stage('Monitoring and Alerting') {
             steps {
-                // Here we use the Datadog Jenkins plugin to report test results or any data needed to Datadog
+                // Report build metrics to Datadog
                 datadog {
-                    // Enable reporting of build events, metrics, and logs from Jenkins to Datadog
                     bat 'echo "Reporting build metrics to Datadog..."'
                 }
             }
