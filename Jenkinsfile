@@ -47,14 +47,15 @@ pipeline {
             }
         }
         stage('Release') {
-            steps {
-                script {
-                    bat """
-                        "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "${params.ProjectName}" --version "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "${params.EnvironmentName}" --space "${params.SpaceId}" --packageversion "1.0.0" --packageid "Jenkins_Pipeline"
-                    """
-                }
-            }
+    steps {
+        script {
+            bat """
+                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "${params.ProjectName}" --version "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "${params.EnvironmentName}" --space "${params.SpaceId}" --packageversion "1.0.0"
+            """
         }
+    }
+}
+
         stage('Monitoring and Alerting') {
             steps {
                 // Report build metrics to Datadog
