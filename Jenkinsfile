@@ -41,20 +41,19 @@ pipeline {
             }
         }
         stage('Release') {
-    steps {
-        script {
-            octopusDeployRelease additionalArgs: '',
-            releaseVersion: '1.0.${BUILD_ID}',
-            project: 'Jenkins_Project', // Change this to your actual project name
-            serverId: 'OctopusServer',
-            spaceId: 'Spaces-1',
-            environment: 'Production',
-            tenant: '',
-            waitForDeployment: true
+            steps {
+                script {
+                    octopusDeployRelease additionalArgs: '',
+                    releaseVersion: "1.0.${BUILD_ID}",
+                    project: 'Jenkins_Project', // Ensure this matches your Octopus project name
+                    serverId: 'OctopusServer', // Make sure this is correctly set in Jenkins configuration
+                    spaceId: 'Spaces-1', // Confirm this is correct
+                    environment: 'Production', // Ensure this matches the environment in Octopus
+                    tenant: '',
+                    waitForDeployment: true
+                }
+            }
         }
-    }
-}
-
         stage('Monitoring and Alerting') {
             steps {
                 // Report build metrics to Datadog
