@@ -3,7 +3,7 @@ pipeline {
     environment {
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-17"
         PATH = "${JAVA_HOME}\\bin;${env.PATH}"
-        DD_API_KEY = credentials('Jenkins_key') // Grabs your API key securely
+        DD_API_KEY = credentials('Jenkins_key') // Grabs your Datadog API key securely
     }
     stages {
         stage('Build') {
@@ -41,9 +41,10 @@ pipeline {
         }
         stage('Monitoring and Alerting') {
             steps {
-                dir('02-vul-coachwebapp') {
-                    // Attach Datadog agent to the running container with your API key
-                    bat 'docker exec -d 02-vul-coachwebapp-coachwebapp-1 java -javaagent:/app/dd-java-agent.jar -Ddd.agent.host=docker.for.mac.host.internal -Ddd.api.key=$DD_API_KEY'
+                // Here we use the Datadog Jenkins plugin to report test results or any data needed to Datadog
+                datadog {
+                    // Enable reporting of build events, metrics, and logs from Jenkins to Datadog
+                    bat 'echo "Reporting build metrics to Datadog..."'
                 }
             }
         }
