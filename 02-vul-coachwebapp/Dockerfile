@@ -8,7 +8,7 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 COPY target/coachwebspringapp-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 # Copy the Datadog Java agent to the container
-COPY C:/Users/jishnu\ chowdary/Downloads/dd-java-agent.jar /app/dd-java-agent.jar
+COPY dd-java-agent.jar /app/dd-java-agent.jar
 
 # Expose Tomcat’s default port
 EXPOSE 8080
