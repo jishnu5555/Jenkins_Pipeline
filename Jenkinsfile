@@ -44,7 +44,7 @@ pipeline {
     steps {
         script {
             bat """
-                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "Jenkins_Project" --version "1.0.92" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "Production"
+                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "HD_Project" --version "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "Production"
             """
         }
     }
