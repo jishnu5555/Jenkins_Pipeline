@@ -32,13 +32,14 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                dir('02-vul-coachwebapp') {
-                    bat 'docker-compose down || true' // Stop any running container if exists
-                    bat 'docker-compose up --build -d' // Build and run in detached mode
-                }
-            }
+    steps {
+        dir('02-vul-coachwebapp') {
+            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" down || true' 
+            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" up --build -d'
         }
+    }
+}
+
         stage('Monitoring and Alerting') {
             steps {
                 // Here we use the Datadog Jenkins plugin to report test results or any data needed to Datadog
