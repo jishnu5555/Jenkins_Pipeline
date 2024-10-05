@@ -2,7 +2,7 @@ pipeline {
     agent any 
     environment {
         JAVA_HOME = "C:\\Program Files\\Java\\jdk-17"
-        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
+        PATH = "${JAVA_HOME}\\bin;${env.PATH};C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64" // Include the path to octo.exe
         DD_API_KEY = credentials('Jenkins_key') // Datadog API key
         OCTOPUS_API_KEY = credentials('Octopus_API_Key') // Octopus API key from Jenkins credentials
     }
@@ -43,17 +43,12 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    octopusDeployRelease additionalArgs: '',
-                    releaseVersion: "1.0.${BUILD_ID}",
-                    project: 'Jenkins_Project', // Ensure this matches your Octopus project name
-                    serverId: 'OctopusServer', // Make sure this is correctly set in Jenkins configuration
-                    spaceId: 'Spaces-1', // Confirm this is correct
-                    environment: 'Production', // Ensure this matches the environment in Octopus
-                    tenant: '',
-                    waitForDeployment: true
+                    // Use a direct command to call octo.exe
+                    bat "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe create-release --project 'Jenkins_Project' --version '1.0.${BUILD_ID}' --server 'http://localhost' --apiKey ${OCTOPUS_API_KEY} --deployto 'Production' --space 'Spaces-1'"
                 }
             }
         }
+
         stage('Monitoring and Alerting') {
             steps {
                 // Report build metrics to Datadog
