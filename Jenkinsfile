@@ -49,12 +49,19 @@ pipeline {
         stage('Release') {
     steps {
         script {
+            // Ensure that Octopus can deploy to Production using the correct lifecycle phase
             bat """
-                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "${params.ProjectName}" --version "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "${params.EnvironmentName}" --space "${params.SpaceId}" --packageversion "1.0.0"
+                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" create-release --project "${params.ProjectName}" --version "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "${params.EnvironmentName}" --space "${params.SpaceId}" --packageversion "1.0.0" --ignoreExisting
+            """
+            
+            // Now deploy the release to the Production environment
+            bat """
+                "C:\\Users\\jishnu chowdary\\Downloads\\OctopusTools.9.1.7.win-x64\\octo.exe" deploy-release --project "${params.ProjectName}" --releaseNumber "1.0.0" --server "http://localhost" --apiKey "${OCTOPUS_API_KEY}" --deployto "${params.EnvironmentName}" --space "${params.SpaceId}" --progress
             """
         }
     }
 }
+
 
         stage('Monitoring and Alerting') {
             steps {
